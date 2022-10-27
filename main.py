@@ -30,6 +30,15 @@ def add_client(conn, first_name, last_name, email):
     conn.commit()
 
 
+def add_phone(conn, client_id, phone):
+    with conn.cursor() as cur:
+        cur.execute("""
+            INSERT INTO clientphones(client_id, phone)
+            VALUES(%s, %s) RETURNING id;
+        """)
+    conn.commit()
+
+
 def change_client_firstname(conn, id, first_name):
     with conn.cursor() as cur:
         cur.execute("""
@@ -150,5 +159,17 @@ with psycopg2.connect(database="db_client", user="postgres", password="7u9I367ty
     create_table(conn)
     add_client(conn, 'Алексей', 'Аристархов', 'alexey@yandex.ru')
     add_client(conn, 'Алёна', 'Михай', 'alenamih@mail.ru')
-
+    add_phone(conn, '1', '89122367891')
+    add_phone(conn, '2', '89344359865')
+    add_phone(conn, '2', '89233192435')
+    change_client_firstname(conn, '1', 'Михаил')
+    change_client_lastname(conn, '2', 'Карманова')
+    change_client_email(conn, '2', 'alenakar@mail.ru')
+    change_client_phone(conn, '1', '89122403892')
+    delete_phone(conn, '2')
+    delete_client(conn, '2')
+    find_client_firstname(conn, 'Алексей')
+    find_client_lastname(conn, 'Михай')
+    find_client_email(conn, 'alexey@yandex.ru')
+    find_client_phone(conn, '89233192435')
     conn.close()
