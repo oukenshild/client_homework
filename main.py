@@ -26,7 +26,7 @@ def add_client(conn, first_name, last_name, email):
         cur.execute("""
             INSERT INTO db_client(first_name, last_name, email)
             VALUES(%s, %s, %s) RETURNING id;
-        """)
+        """, (first_name, last_name, email,))
     conn.commit()
 
 
@@ -35,7 +35,7 @@ def add_phone(conn, client_id, phone):
         cur.execute("""
             INSERT INTO clientphones(client_id, phone)
             VALUES(%s, %s) RETURNING id;
-        """)
+        """, (client_id, phone,))
     conn.commit()
 
 
@@ -45,7 +45,7 @@ def change_client_firstname(conn, id, first_name):
             UPDATE db_client
             SET first_name = %s
             WHERE id = %s;
-        """)
+        """, (first_name, id,))
         cur.execute("""
             SELECT * FROM db_client;
         """)
@@ -58,7 +58,7 @@ def change_client_lastname(conn, id, last_name):
             UPDATE db_client
             SET last_name = %s
             WHERE id = %s;
-        """)
+        """, (last_name, id,))
         cur.execute("""
             SELECT * FROM db_client;
         """)
@@ -71,20 +71,20 @@ def change_client_email(conn, id, email):
             UPDATE db_client
             SET email = %s
             WHERE id = %s;
-        """)
+        """, (email, id,))
         cur.execute("""
             SELECT * FROM db_client;
         """)
     return cur.fetchall()
 
 
-def change_client_phone(conn, client_id, phones):
+def change_client_phone(conn, client_id, phone):
     with conn.cursor() as cur:
         cur.execute("""
             UPDATE clientphones
             SET phone = %s
             WHERE client_id = %s;
-        """)
+        """, (phone, client_id,))
         cur.execute("""
             SELECT * FROM clientphones;
         """)
@@ -96,7 +96,7 @@ def delete_phone(conn, id):
         cur.execute("""
             DELETE FROM clientphones
             WHERE id = %s;
-        """, (1,))
+        """, (id,))
         cur.execute("""
             SELECT * FROM clientphones;
         """)
@@ -108,7 +108,7 @@ def delete_client(conn, id):
         cur.execute("""
             DELETE FROM db_client
             WHERE id = %s;
-        """, (1,))
+        """, (id,))
         cur.execute("""
             SELECT * FROM db_client;
         """)
